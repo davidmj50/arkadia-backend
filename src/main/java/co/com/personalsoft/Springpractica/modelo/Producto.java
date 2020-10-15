@@ -6,13 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
 
 @Entity
 @Table (name="tbl_productos")
@@ -30,14 +25,12 @@ public class Producto {
 	private int precio;
 	@Column
 	private int stock;
-	//alter table db_arkadia.tbl_productos MODIFY Imagen blob
-	@Lob
-	@JsonIgnore
-	@Column(name = "Imagen")
-	private byte[] imageb;
+	@Column
+	private String imagen;
 	@ManyToOne
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
+	
 	public int getId_Producto() {
 		return id_Producto;
 	}
