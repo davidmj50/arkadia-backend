@@ -42,7 +42,10 @@ public class ControlRol {
     
     @PutMapping("/roles/{id_rol}")
     public Rol editRol(@RequestBody Rol r, @PathVariable("id_rol") int idRol ) {
-    	Rol rol = rolDTO.save(r);
+    	Optional<Rol> o = rolDTO.findById(idRol);
+    	Rol rol = o.get();
+    	r.setId_rol(rol.getId_rol());
+    	rolDTO.save(r);
     	return rol;
     }
     

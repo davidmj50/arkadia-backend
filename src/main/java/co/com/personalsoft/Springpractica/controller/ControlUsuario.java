@@ -43,8 +43,11 @@ public class ControlUsuario {
 
     @PutMapping("/usuario/{id_usuario}")
     public Usuario editUsuario(@RequestBody Usuario u, @PathVariable("id_usuario") int idusuario) {
-        Usuario usuario = usuarioDTO.save(u);
-        return usuario;
+        Optional<Usuario> o = usuarioDTO.findById(idusuario);
+        Usuario usuario = o.get();
+        u.setId_Usuario(usuario.getId_Usuario());
+        usuarioDTO.save(u);
+    	return usuario;
     }
 
     @DeleteMapping("/usuario/{id_usuario}")
