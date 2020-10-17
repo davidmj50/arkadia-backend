@@ -54,5 +54,12 @@ public class ControlDetalleVenta {
     public void deleteDetalleVenta(@PathVariable("id_detalle") int iddetalle) {
         detalleventaDTO.deleteById(iddetalle);
     }
+    
+    @PostMapping("/detalleventasaveall")
+    public String listDetalleVentas(@RequestBody List<DetalleVenta> detalleVentas) {
+    	detalleventaDTO.saveAll(detalleVentas);
+    	return "Detalles almacenados ";
+    }
+    
 	
 }

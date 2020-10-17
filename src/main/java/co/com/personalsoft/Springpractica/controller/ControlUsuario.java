@@ -3,6 +3,10 @@ package co.com.personalsoft.Springpractica.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +27,8 @@ public class ControlUsuario {
 
 	@Autowired
     private UsuarioDTO usuarioDTO;
+	@PersistenceContext
+	private EntityManager em;
 
     @GetMapping("/usuario")
     public List<Usuario> buscarUsuario() {
@@ -54,5 +60,24 @@ public class ControlUsuario {
     public void deleteUsuario(@PathVariable("id_usuario") int idusuario) {
         usuarioDTO.deleteById(idusuario);
     }
+    
+    @GetMapping("/login/{username}/{password}")
+    public boolean Usuarioid(@PathVariable("username") String username, @PathVariable("password") String password) {
+        List<Usuario>Usuarios=(List<Usuario>) usuarioDTO.validateUsername(username, password);
+        return Usuarios.isEmpty()==false;
+    }
+    
+    @GetMapping("/usuariouser/{user_name}")
+	public boolean puntosUsuario(@PathVariable("user_name") String userName){
+		String sql = "SELECT count(0) FROM tbl_usuarios WHERE Username = " + "'" + userName + "'";
+		Query query = em.createNativeQuery(sql);
+		int registros = (int) query.getSingleResult();
+		if (registros != 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	
 }
