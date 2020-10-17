@@ -69,9 +69,14 @@ public class ControlUsuario {
     
     @GetMapping("/usuariouser/{user_name}")
 	public boolean puntosUsuario(@PathVariable("user_name") String userName){
-		String sql = "SELECT count(0) FROM tbl_usuarios WHERE Username = " + "'" + userName + "'";
+		int registros = 0;
+    	String sql = "SELECT Id_Usuario FROM tbl_usuarios WHERE Username = " + "'" + userName + "'";
 		Query query = em.createNativeQuery(sql);
-		int registros = (int) query.getSingleResult();
+		try {
+			registros = (int) query.getSingleResult();
+		}catch (Exception e){
+			registros = 0;
+		}
 		if (registros != 0) {
 			return true;
 		}
