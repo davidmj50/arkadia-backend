@@ -3,6 +3,10 @@ package co.com.personalsoft.Springpractica.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +27,9 @@ public class ControlProducto {
 
 	 @Autowired
 	 private ProductoDTO productoDTO;
-
-	
+	 @PersistenceContext
+	 private EntityManager em;
+	 	
 	@GetMapping("/producto")
     public List<Producto> buscarProducto() {
         List<Producto> producto = productoDTO.findAll();
@@ -54,6 +59,12 @@ public class ControlProducto {
     @DeleteMapping("/producto/{id_producto}")
     public void deleteProducto(@PathVariable("id_producto") int idproducto) {
         productoDTO.deleteById(idproducto);
+    }
+    
+    @GetMapping("/prodcategoria/{id_categoria}")
+    public List<Producto> ProductoCatg(@PathVariable("id_categoria") int idcategoria) {
+        Query nativeQuery = em.createNativeQuery("SELECT * FROM Tbl_Productos WHERE Id_Categoria = " + idcategoria);
+        return nativeQuery.getResultList();
     }
 	
 }

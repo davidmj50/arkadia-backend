@@ -31,8 +31,8 @@ public class ControlVenta {
     }
 
     @PostMapping("/venta")
-    public void newVenta(@RequestBody Venta v) {
-        ventaDTO.save(v);
+    public Venta newVenta(@RequestBody Venta v) {
+        return ventaDTO.save(v);        
     }
 
     @GetMapping("/venta/{id_venta}")
