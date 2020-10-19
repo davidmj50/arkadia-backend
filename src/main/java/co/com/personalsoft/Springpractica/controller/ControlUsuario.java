@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,9 +63,12 @@ public class ControlUsuario {
     }
     
     @GetMapping("/login/{username}/{password}")
-    public boolean Usuarioid(@PathVariable("username") String username, @PathVariable("password") String password) {
+    public ResponseEntity<?> Usuarioid(@PathVariable("username") String username, @PathVariable("password") String password) {
         List<Usuario>Usuarios=(List<Usuario>) usuarioDTO.validateUsername(username, password);
-        return Usuarios.isEmpty()==false;
+        if(Usuarios.isEmpty()) {
+        	return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(Usuarios.get(0));
     }
     
     @GetMapping("/usuariouser/{user_name}")

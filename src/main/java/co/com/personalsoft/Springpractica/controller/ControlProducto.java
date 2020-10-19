@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -61,10 +60,10 @@ public class ControlProducto {
         productoDTO.deleteById(idproducto);
     }
     
-    @GetMapping("/prodcategoria/{id_categoria}")
+    @GetMapping("/producto/prodcategoria/{id_categoria}")
     public List<Producto> ProductoCatg(@PathVariable("id_categoria") int idcategoria) {
-        Query nativeQuery = em.createNativeQuery("SELECT * FROM Tbl_Productos WHERE Id_Categoria = " + idcategoria);
-        return nativeQuery.getResultList();
+    	List<Producto> productos = this.productoDTO.getProductsByIdCategory(idcategoria);
+        return productos;
     }
 	
 }
