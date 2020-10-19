@@ -3,7 +3,12 @@ package co.com.personalsoft.Springpractica.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +28,8 @@ public class ControlUsuario {
 
 	@Autowired
     private UsuarioDTO usuarioDTO;
+	@PersistenceContext
+	private EntityManager em;
 
     @GetMapping("/usuario")
     public List<Usuario> buscarUsuario() {
@@ -43,13 +50,43 @@ public class ControlUsuario {
 
     @PutMapping("/usuario/{id_usuario}")
     public Usuario editUsuario(@RequestBody Usuario u, @PathVariable("id_usuario") int idusuario) {
-        Usuario usuario = usuarioDTO.save(u);
-        return usuario;
+        Optional<Usuario> o = usuarioDTO.findById(idusuario);
+        Usuario usuario = o.get();
+        u.setId_Usuario(usuario.getId_Usuario());
+        usuarioDTO.save(u);
+    	return usuario;
     }
 
     @DeleteMapping("/usuario/{id_usuario}")
     public void deleteUsuario(@PathVariable("id_usuario") int idusuario) {
         usuarioDTO.deleteById(idusuario);
     }
+    
+    @GetMapping("/login/{username}/{password}")
+    public ResponseEntity<?> Usuarioid(@PathVariable("username") String username, @PathVariable("password") String password) {
+        List<Usuario>Usuarios=(List<Usuario>) usuarioDTO.validateUsername(username, password);
+        if(Usuarios.isEmpty()) {
+        	return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(Usuarios.get(0));
+    }
+    
+    @GetMapping("/usuariouser/{user_name}")
+	public boolean puntosUsuario(@PathVariable("user_name") String userName){
+		int registros = 0;
+    	String sql = "SELECT Id_Usuario FROM tbl_usuarios WHERE Username = " + "'" + userName + "'";
+		Query query = em.createNativeQuery(sql);
+		try {
+			registros = (int) query.getSingleResult();
+		}catch (Exception e){
+			registros = 0;
+		}
+		if (registros != 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 	
 }

@@ -31,8 +31,8 @@ public class ControlVenta {
     }
 
     @PostMapping("/venta")
-    public void newVenta(@RequestBody Venta v) {
-        ventaDTO.save(v);
+    public Venta newVenta(@RequestBody Venta v) {
+        return ventaDTO.save(v);        
     }
 
     @GetMapping("/venta/{id_venta}")
@@ -43,8 +43,11 @@ public class ControlVenta {
 
     @PutMapping("/venta/{id_venta}")
     public Venta editVenta(@RequestBody Venta v, @PathVariable("id_venta") int idventa) {
-        Venta venta = ventaDTO.save(v);
-        return venta;
+        Optional<Venta> o = ventaDTO.findById(idventa);
+        Venta venta = o.get();
+        v.setId_Venta(venta.getId_Venta());
+        ventaDTO.save(v);
+    	return venta;
     }
 
     @DeleteMapping("/venta/{id_venta}")

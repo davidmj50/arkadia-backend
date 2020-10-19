@@ -3,6 +3,10 @@ package co.com.personalsoft.Springpractica.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +26,8 @@ public class ControlCuenta {
 
 	@Autowired
 	private CuentaDTO cuentaDTO;
+	@PersistenceContext
+	private EntityManager em;
 	
 	@GetMapping("/cuentas")
 	public List<Cuenta> listarCuentas(){
@@ -40,9 +46,19 @@ public class ControlCuenta {
 		return cuentas;
 	}
 	
+	@GetMapping("/cuentaspuntos/{id_usuario}")
+	public int puntosUsuario(@PathVariable("id_usuario") int idUsuario){
+		String sql = "SELECT Cantidad_Puntos FROM tbl_cuenta WHERE Id_Usuario = " + idUsuario;
+		Query query = em.createNativeQuery(sql);
+		return (int) query.getSingleResult();
+	}
+	
 	@PutMapping("/cuentas/{id_cuenta}")
 	public Cuenta editCuenta(@RequestBody Cuenta c, @PathVariable("id_cuenta") int idCuenta ) {
-		Cuenta cuenta = cuentaDTO.save(c);
+		Optional<Cuenta> o = cuentaDTO.findById(idCuenta);
+    	Cuenta cuenta = o.get();
+    	c.setId_Cuenta(cuenta.getId_Cuenta());
+    	cuentaDTO.save(c);
 		return cuenta;
 	}
 	

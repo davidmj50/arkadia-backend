@@ -42,7 +42,10 @@ public class ControlCategoria {
     
     @PutMapping("/categorias/{id_categoria}")
     public Categoria editCategoria(@RequestBody Categoria c, @PathVariable("id_categoria") int idCategoria ) {
-    	Categoria categoria = categoriaDTO.save(c);
+    	Optional<Categoria> o = categoriaDTO.findById(idCategoria);
+    	Categoria categoria = o.get();
+    	c.setId_Categoria(categoria.getId_Categoria());
+    	categoriaDTO.save(c);
     	return categoria;
     }
     

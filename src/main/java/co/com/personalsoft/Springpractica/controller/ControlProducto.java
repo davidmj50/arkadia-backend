@@ -3,6 +3,9 @@ package co.com.personalsoft.Springpractica.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +26,9 @@ public class ControlProducto {
 
 	 @Autowired
 	 private ProductoDTO productoDTO;
-
-	
+	 @PersistenceContext
+	 private EntityManager em;
+	 	
 	@GetMapping("/producto")
     public List<Producto> buscarProducto() {
         List<Producto> producto = productoDTO.findAll();
@@ -44,13 +48,22 @@ public class ControlProducto {
 
     @PutMapping("/producto/{id_producto}")
     public Producto editProducto(@RequestBody Producto p, @PathVariable("id_producto") int idproducto) {
-        Producto producto = productoDTO.save(p);
-        return producto;
+        Optional<Producto> o = productoDTO.findById(idproducto);
+        Producto producto = o.get();
+        p.setId_Producto(producto.getId_Producto());
+        productoDTO.save(p);
+    	return producto;
     }
 
     @DeleteMapping("/producto/{id_producto}")
     public void deleteProducto(@PathVariable("id_producto") int idproducto) {
         productoDTO.deleteById(idproducto);
+    }
+    
+    @GetMapping("/producto/prodcategoria/{id_categoria}")
+    public List<Producto> ProductoCatg(@PathVariable("id_categoria") int idcategoria) {
+    	List<Producto> productos = this.productoDTO.getProductsByIdCategory(idcategoria);
+        return productos;
     }
 	
 }
