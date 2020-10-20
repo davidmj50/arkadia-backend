@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,9 +46,8 @@ public class ControlCuenta {
 	
 	@GetMapping("/cuentaspuntos/{id_usuario}")
 	public int puntosUsuario(@PathVariable("id_usuario") int idUsuario){
-		String sql = "SELECT Cantidad_Puntos FROM tbl_cuenta WHERE Id_Usuario = " + idUsuario;
-		Query query = em.createNativeQuery(sql);
-		return (int) query.getSingleResult();
+		List<Cuenta> cuentas = (List<Cuenta>) cuentaDTO.getPointsByIdUser(idUsuario);
+		return cuentas.get(0).getCantidad_Puntos();
 	}
 	
 	@PutMapping("/cuentas/{id_cuenta}")

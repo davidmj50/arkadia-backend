@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -72,21 +71,9 @@ public class ControlUsuario {
     }
     
     @GetMapping("/usuariouser/{user_name}")
-	public boolean puntosUsuario(@PathVariable("user_name") String userName){
-		int registros = 0;
-    	String sql = "SELECT Id_Usuario FROM tbl_usuarios WHERE Username = " + "'" + userName + "'";
-		Query query = em.createNativeQuery(sql);
-		try {
-			registros = (int) query.getSingleResult();
-		}catch (Exception e){
-			registros = 0;
-		}
-		if (registros != 0) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	public boolean userUsuario(@PathVariable("user_name") String userName){
+    	List<Usuario>Usuarios=(List<Usuario>) usuarioDTO.verificaUsername(userName);
+    	return Usuarios.isEmpty()==false;
 	}
 	
 }
