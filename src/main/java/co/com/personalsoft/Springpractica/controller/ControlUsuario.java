@@ -3,9 +3,6 @@ package co.com.personalsoft.Springpractica.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.personalsoft.Springpractica.DTO.UsuarioDTO;
+import co.com.personalsoft.Springpractica.modelo.Cuenta;
 import co.com.personalsoft.Springpractica.modelo.Usuario;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
@@ -27,8 +25,8 @@ public class ControlUsuario {
 
 	@Autowired
     private UsuarioDTO usuarioDTO;
-	@PersistenceContext
-	private EntityManager em;
+	@Autowired
+	private ControlCuenta controlCuenta;
 
     @GetMapping("/usuario")
     public List<Usuario> buscarUsuario() {
@@ -39,6 +37,10 @@ public class ControlUsuario {
     @PostMapping("/usuario")
     public void newUsuario(@RequestBody Usuario u) {
         usuarioDTO.save(u);
+        Cuenta cuenta = new Cuenta();
+        cuenta.setUsuario(u);
+        cuenta.setCantidad_Puntos(2000);
+        controlCuenta.newCuenta(cuenta);
     }
 
     @GetMapping("/usuario/{id_usuario}")
