@@ -3,9 +3,6 @@ package co.com.personalsoft.Springpractica.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,9 +23,7 @@ public class ControlProducto {
 
 	 @Autowired
 	 private ProductoDTO productoDTO;
-	 @PersistenceContext
-	 private EntityManager em;
-	 	
+	 	 	
 	@GetMapping("/producto")
     public List<Producto> buscarProducto() {
         List<Producto> producto = productoDTO.findAll();
@@ -66,4 +61,11 @@ public class ControlProducto {
         return productos;
     }
 	
+    @GetMapping("/producto/producsearch/{nameproduct}")
+    public List<Producto> productoByName(@PathVariable("nameproduct") String nameProduct){
+    	List<Producto> productos = productoDTO.getProductsByName(nameProduct);
+    	return productos;
+    }
+    
+    
 }
