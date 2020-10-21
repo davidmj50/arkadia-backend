@@ -63,7 +63,7 @@ public class ControlUsuario {
         usuarioDTO.deleteById(idusuario);
     }
     
-    @GetMapping("/login/{username}/{password}")
+    @GetMapping("/usuario/login/{username}/{password}")
     public ResponseEntity<?> Usuarioid(@PathVariable("username") String username, @PathVariable("password") String password) {
         List<Usuario>Usuarios=(List<Usuario>) usuarioDTO.validateUsername(username, password);
         if(Usuarios.isEmpty()) {
