@@ -30,8 +30,9 @@ public class ControlContactenos {
 	}
 	
 	@PostMapping("/contactenos")
-	public void newContactenos(@RequestBody Contactenos contactenos) {
+	public Contactenos newContactenos(@RequestBody Contactenos contactenos) {
 		contactenosDTO.save(contactenos);
+		return contactenos;
 	}
 	
 	@GetMapping("/contactenos/{id}")
