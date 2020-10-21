@@ -3,10 +3,6 @@ package co.com.personalsoft.Springpractica.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.com.personalsoft.Springpractica.DTO.UsuarioDTO;
+import co.com.personalsoft.Springpractica.modelo.Cuenta;
 import co.com.personalsoft.Springpractica.modelo.Usuario;
 
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
@@ -28,8 +25,8 @@ public class ControlUsuario {
 
 	@Autowired
     private UsuarioDTO usuarioDTO;
-	@PersistenceContext
-	private EntityManager em;
+	@Autowired
+	private ControlCuenta controlCuenta;
 
     @GetMapping("/usuario")
     public List<Usuario> buscarUsuario() {
@@ -40,6 +37,10 @@ public class ControlUsuario {
     @PostMapping("/usuario")
     public void newUsuario(@RequestBody Usuario u) {
         usuarioDTO.save(u);
+        Cuenta cuenta = new Cuenta();
+        cuenta.setUsuario(u);
+        cuenta.setCantidad_Puntos(2000);
+        controlCuenta.newCuenta(cuenta);
     }
 
     @GetMapping("/usuario/{id_usuario}")
@@ -72,21 +73,9 @@ public class ControlUsuario {
     }
     
     @GetMapping("/usuariouser/{user_name}")
-	public boolean puntosUsuario(@PathVariable("user_name") String userName){
-		int registros = 0;
-    	String sql = "SELECT Id_Usuario FROM tbl_usuarios WHERE Username = " + "'" + userName + "'";
-		Query query = em.createNativeQuery(sql);
-		try {
-			registros = (int) query.getSingleResult();
-		}catch (Exception e){
-			registros = 0;
-		}
-		if (registros != 0) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	public boolean userUsuario(@PathVariable("user_name") String userName){
+    	List<Usuario>Usuarios=(List<Usuario>) usuarioDTO.verificaUsername(userName);
+    	return Usuarios.isEmpty()==false;
 	}
 	
 }

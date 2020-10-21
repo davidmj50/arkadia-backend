@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,5 +39,20 @@ public class ControlContactenos {
 		Optional<Contactenos> contactenos = contactenosDTO.findById(idContactenos);
 		return contactenos;
 	}
+	
+	@PutMapping("/contactenos/{id}")
+    public Contactenos editContactenos(@RequestBody Contactenos c, @PathVariable("id") int idContactenos) {
+        Optional<Contactenos> o = contactenosDTO.findById(idContactenos);
+    	Contactenos contactenos = o.get();
+    	c.setId(contactenos.getId());
+    	contactenosDTO.save(c);
+    	return contactenos;        
+    }
+	
+	@GetMapping("/contactenosnatendido")
+    public List<Contactenos> contactoNatendido() {
+        List<Contactenos> contactanos = contactenosDTO.getListContacts();
+        return contactanos;
+    }
 	
 }

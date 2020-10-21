@@ -9,4 +9,8 @@ public interface UsuarioDTO extends JpaRepository<Usuario, Integer> {
 
 	@Query("SELECT u FROM Usuario u WHERE u.userName = ?1 AND u.password =?2")
 	Iterable<Usuario> validateUsername(String userName, String password);	
+	
+	@Query("SELECT u FROM Usuario u WHERE u.userName = ?1")
+	Iterable<Usuario> verificaUsername(String userName);
+	
 }
